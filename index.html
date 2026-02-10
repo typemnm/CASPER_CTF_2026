@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CASPER CTF 2026 - Incident Response</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="text-center" style="margin-top: 60px;">
+            <h1 class="logo" style="font-size: 3rem; margin-bottom: 20px;">
+                🔐 CASPER CTF 2026
+            </h1>
+            <h2 style="color: var(--text-cyan); margin-bottom: 40px;">
+                INCIDENT RESPONSE
+            </h2>
+        </div>
+
+        <div class="card story">
+            <h3 style="color: var(--text-accent); margin-bottom: 20px;">📡 긴급 상황 발생</h3>
+            <p style="margin-bottom: 15px;">
+                정보보안 동아리 CASPER의 서버가 해킹당했다.
+            </p>
+            <p style="margin-bottom: 15px;">
+                해커가 서버 곳곳에 잠금장치를 걸어두고 떠났다.
+            </p>
+            <p style="margin-bottom: 15px;">
+                당신은 보안 지식을 활용해 <strong style="color: var(--text-accent);">7개의 잠금장치</strong>를 해제하고 서버를 복구해야 한다.
+            </p>
+            <p style="color: var(--text-error); font-weight: bold; font-size: 1.2rem; margin-top: 20px;">
+                ⏱️ 제한시간: 45분
+            </p>
+        </div>
+
+        <div class="card">
+            <h3 style="color: var(--text-cyan);">🎯 미션 개요</h3>
+            <ul style="list-style-position: inside; line-height: 2;">
+                <li><strong>방 1:</strong> 침해 로그 분석 — 공격 패턴 식별</li>
+                <li><strong>방 2:</strong> 메모리 포렌식 — 악성 프로세스 추적</li>
+                <li><strong>방 3:</strong> 암호 해독실 — 암호학 취약점 분석</li>
+                <li><strong>방 4:</strong> 취약점 분석실 — 시큐어 코딩 리뷰</li>
+                <li><strong>방 5:</strong> 네트워크 침투 — 공격 경로 파악</li>
+                <li><strong>방 6:</strong> 악성코드 행위 분석 — 동적 분석</li>
+                <li><strong>방 7:</strong> 최종 대응 — 인시던트 종합</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h3 style="color: var(--text-cyan);">⚠️ 주의사항</h3>
+            <ul style="list-style-position: inside; line-height: 2;">
+                <li>모바일 브라우저에서 사이트 UI만으로 풀 수 있습니다</li>
+                <li>각 방은 순서대로 통과해야 합니다</li>
+                <li>힌트를 사용하면 <strong style="color: var(--text-error);">+2분</strong>의 시간 페널티가 부과됩니다</li>
+                <li>타이머는 페이지 이동 시에도 계속 진행됩니다</li>
+            </ul>
+        </div>
+
+        <div class="text-center" style="margin: 40px 0;">
+            <button id="start-btn" class="btn btn-large">
+                🚀 미션 시작
+            </button>
+        </div>
+
+        <div class="text-center" style="margin: 20px 0;">
+            <button id="reset-btn" class="btn btn-secondary">
+                🔄 게임 초기화
+            </button>
+        </div>
+    </div>
+
+    <script src="js/common.js"></script>
+    <script>
+        document.getElementById('start-btn').addEventListener('click', function() {
+            // Initialize game state
+            localStorage.clear();
+            initGame();
+            
+            // Go to room 1
+            window.location.href = 'room1.html';
+        });
+
+        document.getElementById('reset-btn').addEventListener('click', function() {
+            resetGame();
+        });
+    </script>
+</body>
+</html>

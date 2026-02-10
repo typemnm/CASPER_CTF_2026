@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>방 4 - 취약점 분석실 | CASPER CTF 2026</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <div class="logo">🔐 CASPER CTF</div>
+            <div class="timer" id="timer">00:00</div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="progress-container">
+            <div class="progress-header">
+                <span class="progress-text" id="progress-text">방 4/7</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill" style="width: 57.12%;"></div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>🐛 방 4 — 취약점 분석실</h2>
+            <p style="color: #aaa; margin-bottom: 20px;">
+                다음 Python 코드 스니펫들을 검토하고, 각각의 보안 취약점을 식별하세요.
+            </p>
+        </div>
+
+        <!-- Code 1: SQL Injection -->
+        <div class="card">
+            <h3>💻 코드 1</h3>
+            <div class="code-block">
+<pre>def login(request):
+    user = request.POST['username']
+    pw = request.POST['password']
+    query = f"SELECT * FROM users WHERE name='{user}' AND pw='{pw}'"
+    db.execute(query)</pre>
+            </div>
+            <div class="question">
+                <label>취약점 유형:</label>
+                <select id="q1">
+                    <option value="">선택하세요</option>
+                    <option value="SQL Injection">SQL Injection</option>
+                    <option value="XSS">XSS</option>
+                    <option value="CSRF">CSRF</option>
+                    <option value="SSRF">SSRF</option>
+                    <option value="Insecure Deserialization">Insecure Deserialization</option>
+                    <option value="Path Traversal">Path Traversal</option>
+                    <option value="Command Injection">Command Injection</option>
+                    <option value="XXE">XXE</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Code 2: XSS -->
+        <div class="card">
+            <h3>💻 코드 2</h3>
+            <div class="code-block">
+<pre>def profile(request):
+    bio = request.GET['bio']
+    return HttpResponse(f"&lt;div class='bio'&gt;{bio}&lt;/div&gt;")</pre>
+            </div>
+            <div class="question">
+                <label>취약점 유형:</label>
+                <select id="q2">
+                    <option value="">선택하세요</option>
+                    <option value="SQL Injection">SQL Injection</option>
+                    <option value="XSS">XSS</option>
+                    <option value="CSRF">CSRF</option>
+                    <option value="SSRF">SSRF</option>
+                    <option value="Insecure Deserialization">Insecure Deserialization</option>
+                    <option value="Path Traversal">Path Traversal</option>
+                    <option value="Command Injection">Command Injection</option>
+                    <option value="XXE">XXE</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Code 3: CSRF -->
+        <div class="card">
+            <h3>💻 코드 3</h3>
+            <div class="code-block">
+<pre>def transfer(request):
+    to = request.POST['to']
+    amount = request.POST['amount']
+    # 사용자 인증은 세션 쿠키로 자동 처리됨
+    process_transfer(request.user, to, amount)</pre>
+            </div>
+            <div class="question">
+                <label>취약점 유형:</label>
+                <select id="q3">
+                    <option value="">선택하세요</option>
+                    <option value="SQL Injection">SQL Injection</option>
+                    <option value="XSS">XSS</option>
+                    <option value="CSRF">CSRF</option>
+                    <option value="SSRF">SSRF</option>
+                    <option value="Insecure Deserialization">Insecure Deserialization</option>
+                    <option value="Path Traversal">Path Traversal</option>
+                    <option value="Command Injection">Command Injection</option>
+                    <option value="XXE">XXE</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Code 4: Insecure Deserialization -->
+        <div class="card">
+            <h3>💻 코드 4</h3>
+            <div class="code-block">
+<pre>import pickle, base64
+
+def load_settings(request):
+    data = request.COOKIES.get('settings')
+    return pickle.loads(base64.b64decode(data))</pre>
+            </div>
+            <div class="question">
+                <label>취약점 유형:</label>
+                <select id="q4">
+                    <option value="">선택하세요</option>
+                    <option value="SQL Injection">SQL Injection</option>
+                    <option value="XSS">XSS</option>
+                    <option value="CSRF">CSRF</option>
+                    <option value="SSRF">SSRF</option>
+                    <option value="Insecure Deserialization">Insecure Deserialization</option>
+                    <option value="Path Traversal">Path Traversal</option>
+                    <option value="Command Injection">Command Injection</option>
+                    <option value="XXE">XXE</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="feedback hidden" id="feedback"></div>
+
+            <div class="text-center mt-20">
+                <button id="submit-btn" class="btn">제출</button>
+            </div>
+        </div>
+
+        <div class="card hint-section">
+            <h3>💡 힌트</h3>
+            <button class="hint-btn btn-secondary">힌트 1 보기 (+2분)</button>
+            <div class="hint-text hidden" id="hint-1">
+                <strong>힌트:</strong> 
+                - 코드 1: f-string으로 SQL 쿼리를 직접 구성하면 사용자 입력이 쿼리 구조를 조작할 수 있습니다.<br>
+                - 코드 2: 사용자 입력을 HTML에 직접 삽입하면 스크립트 실행이 가능합니다.
+            </div>
+            <button class="hint-btn btn-secondary">힌트 2 보기 (+2분)</button>
+            <div class="hint-text hidden" id="hint-2">
+                <strong>힌트:</strong> 
+                - 코드 3: CSRF 토큰 없이 세션만으로 인증하면 외부 사이트에서 요청을 위조할 수 있습니다.<br>
+                - 코드 4: pickle.loads()는 악의적인 객체를 역직렬화하면 임의 코드 실행이 가능합니다.
+            </div>
+        </div>
+    </div>
+
+    <script src="js/common.js"></script>
+    <script src="js/room4.js"></script>
+</body>
+</html>

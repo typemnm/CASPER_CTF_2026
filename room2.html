@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>방 2 - 메모리 포렌식 | CASPER CTF 2026</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <div class="logo">🔐 CASPER CTF</div>
+            <div class="timer" id="timer">00:00</div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="progress-container">
+            <div class="progress-header">
+                <span class="progress-text" id="progress-text">방 2/7</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill" style="width: 28.56%;"></div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>🧠 방 2 — 메모리 포렌식</h2>
+            <p style="color: #aaa; margin-bottom: 20px;">
+                침해당한 서버의 메모리 덤프를 분석합니다. 프로세스 트리와 네트워크 연결을 조사하세요.
+            </p>
+
+            <h3>📋 프로세스 목록</h3>
+            <div style="overflow-x: auto;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>PID</th>
+                            <th>PPID</th>
+                            <th>프로세스명</th>
+                            <th>사용자</th>
+                            <th>CPU</th>
+                            <th>메모리</th>
+                            <th>시작시간</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>0</td>
+                            <td>systemd</td>
+                            <td>root</td>
+                            <td>0.1%</td>
+                            <td>12MB</td>
+                            <td>02:00:01</td>
+                        </tr>
+                        <tr>
+                            <td>234</td>
+                            <td>1</td>
+                            <td>sshd</td>
+                            <td>root</td>
+                            <td>0.0%</td>
+                            <td>8MB</td>
+                            <td>02:00:03</td>
+                        </tr>
+                        <tr>
+                            <td>567</td>
+                            <td>1</td>
+                            <td>apache2</td>
+                            <td>www-data</td>
+                            <td>2.1%</td>
+                            <td>45MB</td>
+                            <td>02:00:05</td>
+                        </tr>
+                        <tr>
+                            <td>890</td>
+                            <td>567</td>
+                            <td>apache2</td>
+                            <td>www-data</td>
+                            <td>0.3%</td>
+                            <td>12MB</td>
+                            <td>03:14:26</td>
+                        </tr>
+                        <tr style="background: rgba(255, 68, 68, 0.1);">
+                            <td><strong>891</strong></td>
+                            <td><strong>890</strong></td>
+                            <td><strong>sh</strong></td>
+                            <td><strong>www-data</strong></td>
+                            <td><strong>0.1%</strong></td>
+                            <td><strong>4MB</strong></td>
+                            <td><strong>03:14:27</strong></td>
+                        </tr>
+                        <tr style="background: rgba(255, 68, 68, 0.1);">
+                            <td><strong>892</strong></td>
+                            <td><strong>891</strong></td>
+                            <td><strong>/tmp/.x</strong></td>
+                            <td><strong>www-data</strong></td>
+                            <td><strong>15.3%</strong></td>
+                            <td><strong>128MB</strong></td>
+                            <td><strong>03:14:28</strong></td>
+                        </tr>
+                        <tr>
+                            <td>1024</td>
+                            <td>1</td>
+                            <td>cron</td>
+                            <td>root</td>
+                            <td>0.0%</td>
+                            <td>6MB</td>
+                            <td>02:00:10</td>
+                        </tr>
+                        <tr>
+                            <td>1100</td>
+                            <td>1</td>
+                            <td>rsyslogd</td>
+                            <td>syslog</td>
+                            <td>0.1%</td>
+                            <td>10MB</td>
+                            <td>02:00:12</td>
+                        </tr>
+                        <tr style="background: rgba(255, 68, 68, 0.1);">
+                            <td><strong>1337</strong></td>
+                            <td><strong>892</strong></td>
+                            <td><strong>nc</strong></td>
+                            <td><strong>www-data</strong></td>
+                            <td><strong>0.5%</strong></td>
+                            <td><strong>2MB</strong></td>
+                            <td><strong>03:14:30</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3 style="margin-top: 30px;">🌐 네트워크 연결</h3>
+            <div style="overflow-x: auto;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>PID</th>
+                            <th>프로토콜</th>
+                            <th>로컬 주소</th>
+                            <th>원격 주소</th>
+                            <th>상태</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>234</td>
+                            <td>TCP</td>
+                            <td>0.0.0.0:22</td>
+                            <td>0.0.0.0:*</td>
+                            <td>LISTEN</td>
+                        </tr>
+                        <tr>
+                            <td>567</td>
+                            <td>TCP</td>
+                            <td>0.0.0.0:80</td>
+                            <td>0.0.0.0:*</td>
+                            <td>LISTEN</td>
+                        </tr>
+                        <tr>
+                            <td>890</td>
+                            <td>TCP</td>
+                            <td>10.0.0.1:80</td>
+                            <td>10.0.14.33:52341</td>
+                            <td>ESTABLISHED</td>
+                        </tr>
+                        <tr>
+                            <td>1337</td>
+                            <td>TCP</td>
+                            <td>10.0.0.1:55123</td>
+                            <td>10.0.14.33:4444</td>
+                            <td>ESTABLISHED</td>
+                        </tr>
+                        <tr style="background: rgba(255, 68, 68, 0.1);">
+                            <td><strong>892</strong></td>
+                            <td><strong>TCP</strong></td>
+                            <td><strong>10.0.0.1:39821</strong></td>
+                            <td><strong>45.33.32.156:8443</strong></td>
+                            <td><strong>ESTABLISHED</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>❓ 질문에 답하세요</h3>
+            
+            <div class="question">
+                <label>1. 악성 프로세스의 PID를 모두 선택하세요 (복수 선택)</label>
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="pid-891" value="891">
+                        <label for="pid-891">891 (sh)</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="pid-892" value="892">
+                        <label for="pid-892">892 (/tmp/.x)</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="pid-1337" value="1337">
+                        <label for="pid-1337">1337 (nc)</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="pid-567" value="567">
+                        <label for="pid-567">567 (apache2)</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="pid-1024" value="1024">
+                        <label for="pid-1024">1024 (cron)</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="question">
+                <label>2. 최초 침입 경로는?</label>
+                <select id="q2">
+                    <option value="">선택하세요</option>
+                    <option value="SSH 브루트포스">SSH 브루트포스</option>
+                    <option value="웹셸 경유">웹셸 경유</option>
+                    <option value="크론잡 실행">크론잡 실행</option>
+                    <option value="직접 로그인">직접 로그인</option>
+                </select>
+            </div>
+
+            <div class="question">
+                <label>3. C2 서버로 의심되는 IP:Port는?</label>
+                <input type="text" id="q3" placeholder="예: 45.33.32.156:8443">
+            </div>
+
+            <div class="question">
+                <label>4. /tmp/.x가 의심되는 이유를 2가지 선택하세요</label>
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="reason-1" value="비정상적 경로">
+                        <label for="reason-1">비정상적 경로(/tmp)에서 실행</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="reason-2" value="높은 리소스">
+                        <label for="reason-2">www-data 권한으로 높은 CPU/메모리 사용</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="reason-3" value="root 권한">
+                        <label for="reason-3">root 권한으로 실행됨</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="reason-4" value="포트 바인딩">
+                        <label for="reason-4">포트 22번을 바인딩함</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="feedback hidden" id="feedback"></div>
+
+            <div class="text-center mt-20">
+                <button id="submit-btn" class="btn">제출</button>
+            </div>
+        </div>
+
+        <div class="card hint-section">
+            <h3>💡 힌트</h3>
+            <button class="hint-btn btn-secondary">힌트 1 보기 (+2분)</button>
+            <div class="hint-text hidden" id="hint-1">
+                <strong>힌트:</strong> 프로세스 트리를 따라가 보세요. apache2 → sh → /tmp/.x → nc 순서로 
+                부모-자식 관계를 확인할 수 있습니다. 시작 시간도 순차적입니다.
+            </div>
+            <button class="hint-btn btn-secondary">힌트 2 보기 (+2분)</button>
+            <div class="hint-text hidden" id="hint-2">
+                <strong>힌트:</strong> C2(Command & Control) 서버는 악성코드가 명령을 받기 위해 연결하는 
+                외부 서버입니다. 10.0.14.33은 공격자의 로컬 IP이고, 다른 외부 IP를 찾아보세요.
+            </div>
+        </div>
+    </div>
+
+    <script src="js/common.js"></script>
+    <script src="js/room2.js"></script>
+</body>
+</html>

