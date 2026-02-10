@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>방 7 - 최종 대응 | CASPER CTF 2026</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <div class="logo">🔐 CASPER CTF</div>
+            <div class="timer" id="timer">00:00</div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="progress-container">
+            <div class="progress-header">
+                <span class="progress-text" id="progress-text">방 7/7</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill" style="width: 100%;"></div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>🎯 방 7 — 최종 대응: 인시던트 타임라인 재구성</h2>
+            <p style="color: #aaa; margin-bottom: 20px;">
+                지금까지의 분석을 종합하여 공격의 전체 흐름을 파악하고 적절한 대응 방안을 수립하세요.
+            </p>
+        </div>
+
+        <!-- Mission A: Kill Chain -->
+        <div class="card">
+            <h3>🔗 [미션 A] 킬체인 재구성</h3>
+            <p style="margin-bottom: 15px;">
+                다음 이벤트들을 올바른 순서로 정렬하세요. 카드를 드래그하여 위아래로 이동할 수 있습니다.
+            </p>
+            
+            <ul class="draggable-list" id="killchain">
+                <li class="draggable-item" draggable="true" data-order="6">Crontab으로 지속성 확보</li>
+                <li class="draggable-item" draggable="true" data-order="3">리버스 셸로 초기 접근 획득</li>
+                <li class="draggable-item" draggable="true" data-order="10">랜섬웨어 배포 및 파일 암호화</li>
+                <li class="draggable-item" draggable="true" data-order="1">SQL Injection 취약점 발견</li>
+                <li class="draggable-item" draggable="true" data-order="8">관리자 PC로 횡이동 (크레덴셜 재사용)</li>
+                <li class="draggable-item" draggable="true" data-order="4">/tmp/.x 바이너리 다운로드 및 실행</li>
+                <li class="draggable-item" draggable="true" data-order="7">내부 DB서버로 피벗팅</li>
+                <li class="draggable-item" draggable="true" data-order="2">웹셸(sh3ll.php) 업로드</li>
+                <li class="draggable-item" draggable="true" data-order="9">백업서버 접근 및 백업 삭제</li>
+                <li class="draggable-item" draggable="true" data-order="5">C2 서버(45.33.32.156:8443)와 통신 수립</li>
+            </ul>
+        </div>
+
+        <!-- Mission B: Response Priority -->
+        <div class="card">
+            <h3>🚨 [미션 B] 대응 우선순위</h3>
+            <p style="margin-bottom: 15px;">
+                지금 즉시 해야 할 조치 3가지를 우선순위대로 선택하세요.
+            </p>
+
+            <div class="question">
+                <label>1순위 (가장 먼저 해야 할 일):</label>
+                <select id="priority1">
+                    <option value="">선택하세요</option>
+                    <option value="a">a) 웹서버의 sh3ll.php 삭제</option>
+                    <option value="b">b) 방화벽에서 C2 IP(45.33.32.156) 차단</option>
+                    <option value="c">c) 전체 서버 포맷 및 재설치</option>
+                    <option value="d">d) 관리자 비밀번호 전체 변경</option>
+                    <option value="e">e) 감염 서버 네트워크 격리</option>
+                    <option value="f">f) 경영진에게 보고서 작성</option>
+                    <option value="g">g) Crontab 백도어 제거</option>
+                </select>
+            </div>
+
+            <div class="question">
+                <label>2순위:</label>
+                <select id="priority2">
+                    <option value="">선택하세요</option>
+                    <option value="a">a) 웹서버의 sh3ll.php 삭제</option>
+                    <option value="b">b) 방화벽에서 C2 IP(45.33.32.156) 차단</option>
+                    <option value="c">c) 전체 서버 포맷 및 재설치</option>
+                    <option value="d">d) 관리자 비밀번호 전체 변경</option>
+                    <option value="e">e) 감염 서버 네트워크 격리</option>
+                    <option value="f">f) 경영진에게 보고서 작성</option>
+                    <option value="g">g) Crontab 백도어 제거</option>
+                </select>
+            </div>
+
+            <div class="question">
+                <label>3순위:</label>
+                <select id="priority3">
+                    <option value="">선택하세요</option>
+                    <option value="a">a) 웹서버의 sh3ll.php 삭제</option>
+                    <option value="b">b) 방화벽에서 C2 IP(45.33.32.156) 차단</option>
+                    <option value="c">c) 전체 서버 포맷 및 재설치</option>
+                    <option value="d">d) 관리자 비밀번호 전체 변경</option>
+                    <option value="e">e) 감염 서버 네트워크 격리</option>
+                    <option value="f">f) 경영진에게 보고서 작성</option>
+                    <option value="g">g) Crontab 백도어 제거</option>
+                </select>
+            </div>
+
+            <div class="feedback hidden" id="feedback"></div>
+
+            <div class="text-center mt-20">
+                <button id="submit-btn" class="btn">제출하고 탈출 완료!</button>
+            </div>
+        </div>
+
+        <div class="card hint-section">
+            <h3>💡 힌트</h3>
+            <button class="hint-btn btn-secondary">힌트 1 보기 (+2분)</button>
+            <div class="hint-text hidden" id="hint-1">
+                <strong>힌트:</strong> 킬체인은 방 1부터 6까지 본 순서를 따릅니다: 
+                SQL Injection → 웹셸 → 리버스 셸 → 바이너리 실행 → C2 통신 → 지속성 → 피벗팅 → 횡이동 → 백업 삭제 → 랜섬웨어
+            </div>
+            <button class="hint-btn btn-secondary">힌트 2 보기 (+2분)</button>
+            <div class="hint-text hidden" id="hint-2">
+                <strong>힌트:</strong> 인시던트 대응 우선순위: 
+                1) 격리(Containment) - 추가 피해 방지
+                2) 차단(Eradication) - 공격 경로 차단
+                3) 백도어 제거(Recovery) - 재감염 방지
+            </div>
+        </div>
+    </div>
+
+    <script src="js/common.js"></script>
+    <script src="js/room7.js"></script>
+</body>
+</html>

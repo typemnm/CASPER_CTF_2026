@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>방 6 - 악성코드 행위 분석 | CASPER CTF 2026</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <div class="logo">🔐 CASPER CTF</div>
+            <div class="timer" id="timer">00:00</div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="progress-container">
+            <div class="progress-header">
+                <span class="progress-text" id="progress-text">방 6/7</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill" style="width: 85.68%;"></div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>🦠 방 6 — 악성코드 행위 분석</h2>
+            <p style="color: #aaa; margin-bottom: 20px;">
+                샌드박스에서 실행된 의심스러운 파일의 동적 분석 리포트를 검토하세요.
+            </p>
+        </div>
+
+        <div class="card">
+            <h3>📄 파일 정보</h3>
+            <table>
+                <tr>
+                    <th>파일명</th>
+                    <td style="color: var(--text-error); font-weight: bold;">resume_2026.pdf.exe</td>
+                </tr>
+                <tr>
+                    <th>크기</th>
+                    <td>847 KB</td>
+                </tr>
+                <tr>
+                    <th>서명</th>
+                    <td style="color: var(--text-error);">없음 (Unsigned)</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="card">
+            <h3>⏱️ 행위 로그 타임라인</h3>
+            <div class="log-container">
+                <div class="log-line">[00:00] 프로세스 생성: resume_2026.pdf.exe (PID: 2048)</div>
+                <div class="log-line suspicious">[00:01] 파일 생성: C:\Users\victim\AppData\Local\Temp\svchost.exe</div>
+                <div class="log-line suspicious">[00:02] 레지스트리 수정: HKCU\Software\Microsoft\Windows\CurrentVersion\Run → "WindowsUpdate" = "C:\...\Temp\svchost.exe"</div>
+                <div class="log-line suspicious">[00:03] DNS 쿼리: aGlkZGVuLmV2aWwuY29t (TXT 레코드)</div>
+                <div class="log-line suspicious">[00:04] HTTPS 연결: 185.220.101.42:8443</div>
+                <div class="log-line">[00:05] 파일 열거: C:\Users\victim\Documents\*.docx, *.xlsx, *.pptx</div>
+                <div class="log-line suspicious">[00:06] 파일 생성: C:\Users\victim\Documents\*.docx.enc</div>
+                <div class="log-line suspicious">[00:07] 파일 삭제: 원본 .docx, .xlsx, .pptx 파일들</div>
+                <div class="log-line suspicious">[00:08] 파일 생성: C:\Users\victim\Desktop\README_DECRYPT.txt</div>
+                <div class="log-line suspicious">[00:09] 프로세스 실행: vssadmin delete shadows /all /quiet</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>❓ 질문에 답하세요 (5문제)</h3>
+            
+            <div class="question">
+                <label>1. 악성코드 분류:</label>
+                <select id="q1">
+                    <option value="">선택하세요</option>
+                    <option value="RAT">RAT (Remote Access Trojan)</option>
+                    <option value="Ransomware">Ransomware</option>
+                    <option value="Worm">Worm</option>
+                    <option value="Rootkit">Rootkit</option>
+                    <option value="Cryptominer">Cryptominer</option>
+                </select>
+            </div>
+
+            <div class="question">
+                <label>2. Persistence (지속성) 기법:</label>
+                <select id="q2">
+                    <option value="">선택하세요</option>
+                    <option value="서비스 등록">서비스 등록</option>
+                    <option value="스케줄드 태스크">스케줄드 태스크</option>
+                    <option value="레지스트리 Run 키">레지스트리 Run 키</option>
+                    <option value="DLL Hijacking">DLL Hijacking</option>
+                </select>
+            </div>
+
+            <div class="question">
+                <label>3-1. [00:03] DNS 쿼리의 Base64 문자열을 디코딩하세요:</label>
+                <div style="background: var(--bg-card); padding: 15px; border-radius: 6px; margin: 10px 0;">
+                    <input type="text" id="base64-input" placeholder="aGlkZGVuLmV2aWwuY29t" 
+                           value="aGlkZGVuLmV2aWwuY29t" style="margin-bottom: 10px;">
+                    <button id="decode-btn" class="btn btn-secondary">디코딩</button>
+                    <div id="decode-result" style="margin-top: 10px; padding: 10px; background: #000; border-radius: 4px; font-family: 'Courier New', monospace; min-height: 40px;">
+                        <span style="color: #666;">디코딩 결과가 여기에 표시됩니다</span>
+                    </div>
+                </div>
+                <label>3-2. 디코딩된 도메인을 입력하세요:</label>
+                <input type="text" id="q3-domain" placeholder="예: hidden.evil.com">
+            </div>
+
+            <div class="question">
+                <label>3-3. 이 기법의 이름은?</label>
+                <select id="q3-technique">
+                    <option value="">선택하세요</option>
+                    <option value="DNS 터널링">DNS 터널링</option>
+                    <option value="ARP 스푸핑">ARP 스푸핑</option>
+                    <option value="DNS 캐시 포이즈닝">DNS 캐시 포이즈닝</option>
+                    <option value="DNS 리바인딩">DNS 리바인딩</option>
+                </select>
+            </div>
+
+            <div class="question">
+                <label>4. VSS(Volume Shadow Service) 삭제 이유:</label>
+                <select id="q4">
+                    <option value="">선택하세요</option>
+                    <option value="시스템 성능 향상">시스템 성능 향상</option>
+                    <option value="백업 복원 불가능">백업/복원을 불가능하게 하여 복호화 비용 지불을 강제하기 위해</option>
+                    <option value="디스크 공간 확보">디스크 공간 확보</option>
+                    <option value="로그 삭제">로그 삭제</option>
+                </select>
+            </div>
+
+            <div class="question">
+                <label>5. [00:01]~[00:02] 행위에 해당하는 MITRE ATT&CK Tactic:</label>
+                <select id="q5">
+                    <option value="">선택하세요</option>
+                    <option value="Initial Access">Initial Access</option>
+                    <option value="Execution">Execution</option>
+                    <option value="Persistence">Persistence</option>
+                    <option value="Exfiltration">Exfiltration</option>
+                    <option value="Impact">Impact</option>
+                </select>
+            </div>
+
+            <div class="feedback hidden" id="feedback"></div>
+
+            <div class="text-center mt-20">
+                <button id="submit-btn" class="btn">제출</button>
+            </div>
+        </div>
+
+        <div class="card hint-section">
+            <h3>💡 힌트</h3>
+            <button class="hint-btn btn-secondary">힌트 1 보기 (+2분)</button>
+            <div class="hint-text hidden" id="hint-1">
+                <strong>힌트:</strong> .enc 확장자와 README_DECRYPT.txt 파일 생성은 랜섬웨어의 전형적인 특징입니다. 
+                VSS 삭제는 복구를 방지하기 위한 것입니다.
+            </div>
+            <button class="hint-btn btn-secondary">힌트 2 보기 (+2분)</button>
+            <div class="hint-text hidden" id="hint-2">
+                <strong>힌트:</strong> Base64 디코딩 도구를 사용하세요. 
+                레지스트리 Run 키 수정은 MITRE ATT&CK의 Persistence 전술에 해당합니다.
+            </div>
+        </div>
+    </div>
+
+    <script src="js/common.js"></script>
+    <script src="js/room6.js"></script>
+</body>
+</html>
