@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>방 5 - 네트워크 침투 | CASPER CTF 2026</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <div class="logo">🔐 CASPER CTF</div>
+            <div class="timer" id="timer">00:00</div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="progress-container">
+            <div class="progress-header">
+                <span class="progress-text" id="progress-text">방 5/7</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill" style="width: 71.4%;"></div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>🌐 방 5 — 네트워크 침투</h2>
+            <p style="color: #aaa; margin-bottom: 20px;">
+                공격자가 인터넷에서 내부 백업서버까지 도달한 경로를 파악하세요. 
+                네트워크 토폴로지와 방화벽 규칙을 분석합니다.
+            </p>
+        </div>
+
+        <div class="card">
+            <h3>🗺️ 네트워크 토폴로지</h3>
+            <div class="network-diagram">
+                <!-- Internet -->
+                <div class="network-layer">
+                    <div class="network-node" data-info="internet">
+                        <h4>🌍 인터넷</h4>
+                        <p style="font-size: 0.8rem; color: #aaa;">외부 네트워크</p>
+                    </div>
+                </div>
+
+                <div style="text-align: center; color: var(--text-accent);">↓ 외부 방화벽 ↓</div>
+
+                <!-- DMZ -->
+                <div class="network-layer">
+                    <div class="network-node" data-info="web">
+                        <h4>웹서버</h4>
+                        <p style="font-size: 0.8rem; color: #aaa;">10.10.1.10</p>
+                        <p style="font-size: 0.75rem; color: var(--text-cyan);">Port 443 열림</p>
+                    </div>
+                    <div class="network-node" data-info="mail">
+                        <h4>메일서버</h4>
+                        <p style="font-size: 0.8rem; color: #aaa;">10.10.1.20</p>
+                        <p style="font-size: 0.75rem; color: var(--text-cyan);">Port 25 열림</p>
+                    </div>
+                </div>
+                <p style="text-align: center; color: #666; font-size: 0.85rem;">DMZ (10.10.1.0/24)</p>
+
+                <div style="text-align: center; color: var(--text-accent); margin-top: 10px;">↓ 내부 방화벽 ↓</div>
+
+                <!-- Internal Network -->
+                <div class="network-layer">
+                    <div class="network-node" data-info="db">
+                        <h4>DB서버</h4>
+                        <p style="font-size: 0.8rem; color: #aaa;">172.16.10.5</p>
+                        <p style="font-size: 0.75rem; color: var(--text-cyan);">Port 3306</p>
+                    </div>
+                    <div class="network-node" data-info="file">
+                        <h4>파일서버</h4>
+                        <p style="font-size: 0.8rem; color: #aaa;">172.16.10.10</p>
+                    </div>
+                    <div class="network-node" data-info="admin">
+                        <h4>관리자PC</h4>
+                        <p style="font-size: 0.8rem; color: #aaa;">172.16.20.100</p>
+                    </div>
+                </div>
+                <p style="text-align: center; color: #666; font-size: 0.85rem;">내부망 (172.16.0.0/16)</p>
+
+                <div style="text-align: center; color: var(--text-accent); margin-top: 10px;">↓ 격리망 연결 ↓</div>
+
+                <!-- Isolated Network -->
+                <div class="network-layer">
+                    <div class="network-node" data-info="backup">
+                        <h4>백업서버</h4>
+                        <p style="font-size: 0.8rem; color: #aaa;">192.168.100.50</p>
+                        <p style="font-size: 0.75rem; color: var(--text-cyan);">Port 22 (SSH)</p>
+                    </div>
+                </div>
+                <p style="text-align: center; color: #666; font-size: 0.85rem;">격리망 (192.168.100.0/24)</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>🛡️ 방화벽 규칙</h3>
+            
+            <h4 style="color: var(--text-cyan); margin-top: 15px;">외부 방화벽:</h4>
+            <div class="code-block">
+<pre>ALLOW  TCP  ANY → 10.10.1.10:443
+ALLOW  TCP  ANY → 10.10.1.20:25
+DENY   ALL</pre>
+            </div>
+
+            <h4 style="color: var(--text-cyan); margin-top: 15px;">내부 방화벽:</h4>
+            <div class="code-block">
+<pre>ALLOW  TCP  10.10.1.0/24 → 172.16.10.5:3306
+ALLOW  TCP  172.16.20.100 → 192.168.100.50:22
+DENY   TCP  10.10.1.0/24 → 172.16.20.0/24
+DENY   ALL</pre>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>❓ 질문에 답하세요</h3>
+            
+            <div class="question">
+                <label>공격 경로를 순서대로 선택하세요 (4단계):</label>
+                
+                <p style="color: var(--text-cyan); margin: 10px 0;">1단계: 최초 침입점</p>
+                <select id="step1">
+                    <option value="">선택하세요</option>
+                    <option value="인터넷">인터넷 (시작점)</option>
+                    <option value="웹서버">웹서버 (10.10.1.10:443)</option>
+                    <option value="메일서버">메일서버 (10.10.1.20:25)</option>
+                </select>
+
+                <p style="color: var(--text-cyan); margin: 10px 0;">2단계: DMZ에서 내부망 진입</p>
+                <select id="step2">
+                    <option value="">선택하세요</option>
+                    <option value="DB서버">DB서버 (172.16.10.5:3306)</option>
+                    <option value="파일서버">파일서버 (172.16.10.10)</option>
+                    <option value="관리자PC">관리자PC (172.16.20.100)</option>
+                </select>
+
+                <p style="color: var(--text-cyan); margin: 10px 0;">3단계: 내부망에서 횡이동</p>
+                <select id="step3">
+                    <option value="">선택하세요</option>
+                    <option value="DB서버">DB서버 (172.16.10.5)</option>
+                    <option value="파일서버">파일서버 (172.16.10.10)</option>
+                    <option value="관리자PC">관리자PC (172.16.20.100)</option>
+                    <option value="백업서버">백업서버 (192.168.100.50)</option>
+                </select>
+
+                <p style="color: var(--text-cyan); margin: 10px 0;">4단계: 최종 목표</p>
+                <select id="step4">
+                    <option value="">선택하세요</option>
+                    <option value="DB서버">DB서버 (172.16.10.5)</option>
+                    <option value="관리자PC">관리자PC (172.16.20.100)</option>
+                    <option value="백업서버">백업서버 (192.168.100.50:22)</option>
+                </select>
+            </div>
+
+            <div class="question">
+                <label>탐지를 위해 모니터링해야 할 가장 의심스러운 트래픽은?</label>
+                <select id="q2">
+                    <option value="">선택하세요</option>
+                    <option value="인터넷에서 웹서버로의 HTTPS 트래픽">인터넷에서 웹서버로의 HTTPS 트래픽</option>
+                    <option value="웹서버에서 DB서버로의 MySQL 연결">웹서버에서 DB서버로의 MySQL 연결</option>
+                    <option value="DB서버에서 관리자PC로의 비정상 연결">DB서버에서 관리자PC로의 비정상 연결</option>
+                    <option value="관리자PC에서 백업서버로의 SSH 연결">관리자PC에서 백업서버로의 SSH 연결</option>
+                </select>
+            </div>
+
+            <div class="feedback hidden" id="feedback"></div>
+
+            <div class="text-center mt-20">
+                <button id="submit-btn" class="btn">제출</button>
+            </div>
+        </div>
+
+        <div class="card hint-section">
+            <h3>💡 힌트</h3>
+            <button class="hint-btn btn-secondary">힌트 1 보기 (+2분)</button>
+            <div class="hint-text hidden" id="hint-1">
+                <strong>힌트:</strong> 외부 방화벽은 443(웹서버)과 25(메일서버)만 허용합니다. 
+                내부 방화벽은 DMZ(10.10.1.0/24)에서 관리자 네트워크(172.16.20.0/24)로의 직접 연결을 차단합니다.
+            </div>
+            <button class="hint-btn btn-secondary">힌트 2 보기 (+2분)</button>
+            <div class="hint-text hidden" id="hint-2">
+                <strong>힌트:</strong> 공격자는 웹서버를 통해 침입한 후, DB서버로 피벗팅할 수 있습니다 (3306 포트 허용). 
+                DB서버에서 관리자PC로 이동하는 것은 정상적이지 않은 패턴입니다.
+            </div>
+        </div>
+    </div>
+
+    <script src="js/common.js"></script>
+    <script src="js/room5.js"></script>
+</body>
+</html>

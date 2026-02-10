@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>탈출 성공! | CASPER CTF 2026</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container success-container">
+        <h1 style="color: var(--text-accent); font-size: 2.5rem; margin-top: 40px;">
+            🎉 탈출 성공! 🎉
+        </h1>
+        
+        <div class="card" style="margin-top: 30px;">
+            <h2 style="text-align: center; color: var(--text-cyan);">
+                서버 복구 완료
+            </h2>
+            <p style="text-align: center; margin: 20px 0; font-size: 1.1rem;">
+                당신은 CASPER 서버를 성공적으로 복구하고<br>
+                모든 보안 레이어를 해제했습니다!
+            </p>
+        </div>
+
+        <div class="grade" id="grade">S+</div>
+
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-value" id="time-stat">00:00</div>
+                <div class="stat-label">소요 시간</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="hints-stat">0</div>
+                <div class="stat-label">힌트 사용</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="grade-stat">S+</div>
+                <div class="stat-label">보안 등급</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3 style="color: var(--text-cyan); text-align: center;">등급 기준</h3>
+            <table style="margin: 20px auto; max-width: 500px;">
+                <thead>
+                    <tr>
+                        <th>등급</th>
+                        <th>기준</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="color: var(--text-accent); font-weight: bold;">S+</td>
+                        <td>30분 이내, 힌트 사용 없음</td>
+                    </tr>
+                    <tr>
+                        <td style="color: var(--text-cyan); font-weight: bold;">A</td>
+                        <td>35분 이내</td>
+                    </tr>
+                    <tr>
+                        <td style="color: #ffaa00; font-weight: bold;">B</td>
+                        <td>45분 이내</td>
+                    </tr>
+                    <tr>
+                        <td style="color: #aaa; font-weight: bold;">C</td>
+                        <td>45분 초과</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="card" style="background: linear-gradient(135deg, rgba(0, 255, 136, 0.1), rgba(0, 212, 255, 0.1)); border: 2px solid var(--text-accent);">
+            <h3 style="color: var(--text-accent); text-align: center; margin-bottom: 20px;">
+                🏆 축하합니다! 🏆
+            </h3>
+            <p style="text-align: center; line-height: 1.8;">
+                당신은 다음을 성공적으로 완수했습니다:<br><br>
+                ✓ 침해 로그 분석 및 공격 패턴 식별<br>
+                ✓ 메모리 포렌식을 통한 악성 프로세스 추적<br>
+                ✓ 암호학 취약점 분석<br>
+                ✓ 시큐어 코딩 리뷰 및 취약점 탐지<br>
+                ✓ 네트워크 침투 경로 파악<br>
+                ✓ 악성코드 동적 분석<br>
+                ✓ 인시던트 타임라인 재구성 및 대응<br>
+            </p>
+        </div>
+
+        <div class="text-center" style="margin: 40px 0;">
+            <button id="restart-btn" class="btn btn-large">
+                🔄 다시 도전하기
+            </button>
+        </div>
+
+        <div class="text-center" style="margin: 20px 0; color: #666;">
+            <p>CASPER CTF 2026 - Incident Response Challenge</p>
+            <p style="margin-top: 10px;">정보보안 동아리 CASPER 졸업생 MT</p>
+        </div>
+    </div>
+
+    <script src="js/common.js"></script>
+    <script>
+        // Display stats
+        const elapsed = getElapsedTime();
+        const hints = parseInt(localStorage.getItem('hintsUsed') || '0');
+        const grade = calculateGrade();
+
+        document.getElementById('time-stat').textContent = formatTime(elapsed);
+        document.getElementById('hints-stat').textContent = hints;
+        document.getElementById('grade-stat').textContent = grade;
+        document.getElementById('grade').textContent = grade;
+
+        // Color grade
+        const gradeElement = document.getElementById('grade');
+        if (grade === 'S+') {
+            gradeElement.style.color = 'var(--text-accent)';
+        } else if (grade === 'A') {
+            gradeElement.style.color = 'var(--text-cyan)';
+        } else if (grade === 'B') {
+            gradeElement.style.color = '#ffaa00';
+        } else {
+            gradeElement.style.color = '#aaa';
+        }
+
+        // Restart button
+        document.getElementById('restart-btn').addEventListener('click', function() {
+            localStorage.clear();
+            window.location.href = 'index.html';
+        });
+    </script>
+</body>
+</html>
