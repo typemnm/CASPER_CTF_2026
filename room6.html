@@ -94,15 +94,22 @@
             <div class="question">
                 <label>3-1. [00:03] DNS 쿼리의 Base64 문자열을 디코딩하세요:</label>
                 <div style="background: var(--bg-card); padding: 15px; border-radius: 6px; margin: 10px 0;">
-                    <input type="text" id="base64-input" placeholder="bWFsaWNpb3VzLmV4YW1wbGUuY29t" 
-                           value="bWFsaWNpb3VzLmV4YW1wbGUuY29t" style="margin-bottom: 10px;">
+                    <input type="text" id="base64-input" placeholder="Base64 문자열을 입력하세요" 
+                           value="aGlkZGVuLmV2aWwuY29t" style="margin-bottom: 10px;">
                     <button id="decode-btn" class="btn btn-secondary">디코딩</button>
                     <div id="decode-result" style="margin-top: 10px; padding: 10px; background: #000; border-radius: 4px; font-family: 'Courier New', monospace; min-height: 40px;">
                         <span style="color: #666;">디코딩 결과가 여기에 표시됩니다</span>
                     </div>
                 </div>
-                <label>3-2. 디코딩된 도메인을 입력하세요:</label>
-                <input type="text" id="q3-domain" placeholder="예: malicious.example.com">
+                <label>3-2. 디코딩된 도메인은?</label>
+                <select id="q3-domain">
+                    <option value="">선택하세요</option>
+                    <option value="malicious.example.com">malicious.example.com</option>
+                    <option value="evil.hidden.com">evil.hidden.com</option>
+                    <option value="hidden.evil.com">hidden.evil.com</option>
+                    <option value="command.control.net">command.control.net</option>
+                    <option value="c2.server.org">c2.server.org</option>
+                </select>
             </div>
 
             <div class="question">
