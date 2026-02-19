@@ -19,7 +19,7 @@
    - `Save` 클릭
 
 3. **접속하기**
-   - 몇 분 후 `https://typemnm.github.io/CASPER_CTF_2026/` 에서 접속 가능
+   - 몇 분 후 `https://[YOUR-USERNAME].github.io/[REPOSITORY-NAME]/` 에서 접속 가능
    - 또는 Settings > Pages에 표시된 URL 확인
 
 ### 장점
