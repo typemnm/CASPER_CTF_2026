@@ -14,7 +14,7 @@ document.getElementById('submit-btn').addEventListener('click', function() {
 
     // Check answers
     const qaCorrect = qa === '모드 1 (ECB)';
-    const qbCorrect = qb === 'padding oracle' || qb === 'padding oracle attack';
+    const qbCorrect = qb === 'padding oracle' || qb === 'padding oracle (attack)';
     const qcCorrect = qc === '사전 공격 (Dictionary Attack)' || qc === '사전 공격';
 
     if (qaCorrect && qbCorrect && qcCorrect) {
@@ -25,13 +25,4 @@ document.getElementById('submit-btn').addEventListener('click', function() {
     } else {
         showFeedback('❌ 다시 분석해보세요. 모든 답이 정확해야 합니다.', false);
     }
-});
-
-// Enter key support
-document.querySelectorAll('input').forEach(input => {
-    input.addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-            document.getElementById('submit-btn').click();
-        }
-    });
 });

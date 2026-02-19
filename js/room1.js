@@ -44,12 +44,3 @@ document.getElementById('submit-btn').addEventListener('click', function() {
         showFeedback('❌ 다시 분석해보세요. 모든 답이 정확해야 합니다.', false);
     }
 });
-
-// Enter key support
-document.querySelectorAll('input').forEach(input => {
-    input.addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-            document.getElementById('submit-btn').click();
-        }
-    });
-});
